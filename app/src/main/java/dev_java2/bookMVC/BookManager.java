@@ -11,6 +11,7 @@ public class BookManager extends JFrame implements ActionListener {
     JButton jbtn_del=new JButton("삭제");//delete문
     JButton jbtn_board=new JButton("게시판");
     JPanel jp_north=new JPanel();
+    String gubun = "bookMgr";//도서크루드이면 bMgr로 게시판 CRUD이면 boardMgr
 
 
     //개발 방법론에서 디자인패턴중 MVC패턴을 알아보자
@@ -57,36 +58,60 @@ public class BookManager extends JFrame implements ActionListener {
     }
 
     public static void main(String[] args) {
-        BookManager bmgr=new BookManager();
+        BookManager bookmgr=new BookManager();
         //메인스레드와 Runnable을 통해서 구현하는 스레드를 분리할수있는 경우에 사용함
         //메인스레드와 자기자신이 run메소드의 구현체 클래스의 역할을 병행하는 컨셉일때
         //이렇게 안하면 지연이 발생한다. 화면안뜸 소켓 accept가 안일어남, 죽은거
-        bmgr.initDisplay();//refactoring-
+        bookmgr.initDisplay();//refactoring-
     }
     //왜 오버라이드로 재정의 하는건가? 아이폰, 갤럭시, 아이패드...결정되지 않았으니까
     @Override
     public void actionPerformed(ActionEvent e) {
-        //입력 수정 삭제 죄회버튼이 클릭되면 이벤트를 JVM이 감지하고
+        //입력 수정 삭제 조회버튼이 클릭되면 이벤트를 JVM이 감지하고
         //감지되면 JVM이 actionPerformed메소드를 알아서 호출해줌
         Object obj= e.getSource();
-        //if문은 무조건 조건을 따진다.
-        //if else문은 앞에 조건을 수렴하면 뒤에있는 코드는 설명기회를 갖지 않는다.
-        //너 조회를 원해?
-        if(obj==jbtn_sel) {
-            System.out.println("조회");
+        BookController bookController= null;
+        BoardController boardController=null;
+        //게시판
+        if(obj==jbtn_board){
+            gubun="boardMgr";
+            if("boardMgr".equals(gubun)){
+                System.out.println("게시판 선택");
+                boardController = (BoardController)FrontController.getController(gubun);
+                System.out.println("게시판 선택 =>" +boardController);
+                gubun="bookMgr";//게시판 버튼 눌렀을때 보드mgr되었다. 다시 바꿔준다
+            }
         }
-        //입력하려구?
-        else if(obj==jbtn_ins){
-            System.out.println("입력");
+        //너 도서 크루드 처리 할거니?
+        else if("bookMgr".equals(gubun)){
+            System.out.println("도서관리 선택");
+            bookController = (BookController)FrontController.getController(gubun);
+            System.out.println("도서관리 선택 =>"+bookController);
+            //if문은 무조건 조건을 따진다.
+            //if else문은 앞에 조건을 수렴하면 뒤에있는 코드는 설명기회를 갖지 않는다.
+
+            //너 조회를 원해?--read
+            if(obj==jbtn_sel) {
+                System.out.println("조회");
+            }
+            //입력하려구?--create
+            else if(obj==jbtn_ins){
+                System.out.println("입력");
+            }
+            //수정할거야?--update
+            else if(obj==jbtn_upd) {
+                System.out.println("수정");
+            }
+            //탈퇴할거니?--delete
+            else if(obj==jbtn_del) {
+                System.out.println("삭제");
+            }
         }
-        //수정할거야?
-        else if(obj==jbtn_upd) {
-            System.out.println("수정");
+        //아님 게시판 크루드처리할까?
+        else if("bMgr".equals(gubun)){
+
         }
-        //탈퇴할거니?
-        else if(obj==jbtn_del) {
-            System.out.println("삭제");
-        }
+
 
     }//end of override
 }//end of class

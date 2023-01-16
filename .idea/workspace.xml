@@ -4,7 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="843e66ce-6523-4952-8b17-46ac13ce5f15" name="Changes" comment="" />
+    <list default="true" id="843e66ce-6523-4952-8b17-46ac13ce5f15" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/dev_java2/bookMVC/BookController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/dev_java2/bookMVC/BookDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/dev_java2/bookMVC/BookDao.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/dev_java2/bookMVC/BookManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/dev_java2/bookMVC/BookManager.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -41,6 +47,9 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectId" id="2Jtqqcc4iQqW6d2xzZAkJDqYd3N" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -60,9 +69,15 @@
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.14875",
     "settings.editor.selected.configurable": "reference.settingsdialog.IDE.editor.colors.Java",
+    "spring.configuration.checksum": "845ee4f31140fc9312d5bf411959a9b5",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="dev_java2.bookMVC" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="ZipcodeSearchView" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="dev_java2.basic3.ZipcodeSearchView" />
@@ -97,6 +112,7 @@
       <workItem from="1672974415703" duration="821000" />
       <workItem from="1672981972754" duration="457000" />
       <workItem from="1672982438400" duration="4824000" />
+      <workItem from="1673845266679" duration="11182000" />
     </task>
     <servers />
   </component>
