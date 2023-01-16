@@ -1,17 +1,37 @@
 package dev_java2.util;
 
-import java.sql.Statement;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 
 public class DBConnectionMgr {
     public static final String _DRIVER = "oracle.jdbc.driver.OracleDriver";//오라클 안에 데이터가 들어있다...
 
     public static final String _URL = "jdbc:oracle:thin:@127.0.0.1:1521:orcl11";
-    public static String _USER = "scott";
+    public static String _USER = "kiwi";//키위쓸때는 키위로 바꾸고 스캇쓸때는 스캇으로
     public static String _PW = "tiger";
+    public DBConnectionMgr(){}
+    //파라미터가 있는 생성자가 하나라도 있으면 디폴트 생성자 제공 안된다.
+
+    public DBConnectionMgr(String ID, String PW) {
+        //static으로 선언된 변수는 this나 super같은 예약어를 사용 불가함.
+        //this에 대한 어려움으로 리액트 훅(함수형 프로그래밍을 지향하는 방식 -> 자바 : 람다식 / 익명클래스 / 내부클래스 컨벤션 동일) 새로운 방식 제안함 16.8번 18.2
+        //웹브라우저에서는 this가 왜 문제인가? - 캡쳐링 / 버블링효과
+        _USER = ID;
+        _PW = PW;
+    }
+    public Connection getConnection(String user, String pw) {
+        _USER = user;
+        _PW = pw;
+        Connection con = null;
+        try {
+            Class.forName(_DRIVER);
+            con = DriverManager.getConnection(_URL, _USER, _PW);
+        } catch (ClassNotFoundException ce) {
+            System.out.println("드라이버 클래스를 찾을 수 없습니다.");
+        } catch (Exception e) {// 멀티 블럭 작성시 더 넓은 클래스가 뒤에 와야함
+            System.out.println("오라클 서버와 커넥션 실패");
+        }
+        return con;
+    }
 
     public Connection getConnection(){
         Connection con =null;
@@ -97,17 +117,22 @@ public class DBConnectionMgr {
             }
         }
     }
+    public static void main(String[] args) {
+        DBConnectionMgr dbMgr=new DBConnectionMgr();
+        Connection con =dbMgr.getConnection();
+        System.out.println("con====>"+con);
+    }
 
-    public void freeConnection (Connection con, PreparedStatement pstmt){
 
-        if(pstmt!=null){
+    public void freeConnection(Connection con, CallableStatement cstmt) {
+        if (cstmt != null) {
             try {
-                pstmt.close();
+                cstmt.close();
             } catch (Exception e) {
                 // TODO: handle exception
             }
         }
-        if(con!=null){
+        if (con != null) {
             try {
                 con.close();
             } catch (Exception e) {
@@ -115,13 +140,8 @@ public class DBConnectionMgr {
             }
         }
     }
-
-    public static void main(String[] args) {
-        DBConnectionMgr dbMgr=new DBConnectionMgr();
-        Connection con =dbMgr.getConnection();
-        System.out.println("con====>"+con);
-    }
 }
+
 /*
  * JDBC API를 이용하여 DB연동하기
  * 1. 각 제조사가 제공하는 드라이버 클래스를 로딩한다.(obdbc6.jar)

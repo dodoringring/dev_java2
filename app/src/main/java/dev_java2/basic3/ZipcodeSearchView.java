@@ -24,12 +24,14 @@ import javax.swing.table.JTableHeader;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseListener;
 
 import dev_java2.util.DBConnectionMgr;
 
-public class ZipcodeSearchView extends JFrame implements ItemListener,FocusListener, ActionListener {
+public class ZipcodeSearchView extends JFrame implements ItemListener,FocusListener, ActionListener, MouseListener {
     // 선언부
-    // 게으른 인스턴스화-오라클과 연동하기 위해
     // 사용자가 선택한 zdo
     String zdo = null;
     // 사용자가 선택한 sigu
@@ -75,6 +77,7 @@ public class ZipcodeSearchView extends JFrame implements ItemListener,FocusListe
     JTableHeader jth_zipcode = jtb_zipcode.getTableHeader();
     JScrollPane jsp_zipcode = new JScrollPane(jtb_zipcode, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
             JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+    MemberShip memberShip=null;
 
     // 생성자
     public ZipcodeSearchView() {
@@ -83,11 +86,18 @@ public class ZipcodeSearchView extends JFrame implements ItemListener,FocusListe
         jtf_search.addActionListener(this);//검색창에 넣고 엔터누르면 실행
         zdos = getZDOList();
         jcb_zdo = new JComboBox(zdos);
-        jcb_sigu = new JComboBox(totals);
-        jcb_dong = new JComboBox(totals);
         jcb_zdo.addItemListener(this);
+        jcb_sigu = new JComboBox(totals);
         jcb_sigu.addItemListener(this);
+        jcb_dong = new JComboBox(totals);
         jcb_dong.addItemListener(this);
+
+    }
+    public ZipcodeSearchView(MemberShip memberShip){
+        //this 뒤에 괄호있으면 자기자신의 디폴트 생성자 호출
+        this();//나자신의 디폴트 생성자 호출-81~92번 진행되어야함
+        this.memberShip = memberShip;
+        this.initDisplay();
     }
 
     // 대분류 정보 초기화에 필요한 DB조회하기 구현
@@ -144,7 +154,6 @@ public class ZipcodeSearchView extends JFrame implements ItemListener,FocusListe
         try {
             // con의 주소번지가 확인 되면 오라클 서버와 연결통로가 확보되었다.
             con = dbMgr.getConnection();
-            // 전령의 역할. 정적-스테이트먼트 동적-프리페어드스테이트먼트
             pstmt = con.prepareStatement(sql.toString());
             pstmt.setString(1, zdo);
             // 오라클에서 생성된 테이블의 커서 디폴트위치는 항상 isTop이다.커서가 존재하는데...이동시킴
@@ -182,6 +191,7 @@ public class ZipcodeSearchView extends JFrame implements ItemListener,FocusListe
 
     // 화면처리부
     public void initDisplay() {
+        jtb_zipcode.addMouseListener(this);
         jth_zipcode.setBackground(Color.CYAN);
         jth_zipcode.setFont(new Font("맑은고딕", Font.BOLD, 20));
         jtb_zipcode.getColumnModel().getColumn(0).setPreferredWidth(100);
@@ -197,11 +207,12 @@ public class ZipcodeSearchView extends JFrame implements ItemListener,FocusListe
         this.add("North", jp_north);
         this.add("Center", jsp_zipcode);
         this.setSize(630, 400);
-        this.setVisible(true);
+        this.setVisible(false);
     }
 
     // 디비에 뿌리기...
     public void refreshData(String zdo, String dong) {
+        System.out.println("refreshData 호출 성공");
         StringBuilder sql = new StringBuilder();
         sql.append("select ");
         sql.append("       zipcode, address");
@@ -256,18 +267,18 @@ public class ZipcodeSearchView extends JFrame implements ItemListener,FocusListe
                 }//end of for
             }
         } catch (SQLException se) {
-            // TODO: handle exception
+            System.out.println(se.toString());
         } catch (Exception e) {
-
+            e.printStackTrace();
         } finally {
             // 사용한 자원을 명시적으로 반드시 반납할것 - 안하면 JVM이 언젠가는 해줌
             // 그 시간을 앞당기는 코드임
             dbMgr.freeConnection(con, pstmt, rs);
         }
 
-    }
+    }//end of refreshData
 
-    // 메인
+    // 메인메소드
     public static void main(String[] args) {
         JFrame.setDefaultLookAndFeelDecorated(true);
         ZipcodeSearchView zcsv = new ZipcodeSearchView();
@@ -311,7 +322,6 @@ public class ZipcodeSearchView extends JFrame implements ItemListener,FocusListe
     // 인터페이스가 소지한 모든 추상메소드를 구현해야한다.
     @Override
     public void focusLost(FocusEvent e) {// 구현으로 본다 {} 있으니까.
-        // TODO Auto-generated method stub
 
     }
 
@@ -322,5 +332,44 @@ public class ZipcodeSearchView extends JFrame implements ItemListener,FocusListe
             String myDong=jtf_search.getText();
             refreshData(zdo,myDong);
         }
+    }
+
+    //마우스 하나만 써도 5개 다 있어야한다.
+    @Override
+    public void mouseClicked(MouseEvent e) {
+//        if(e.getClickCount()==2){
+//            System.out.println("더블클릭 한거야?");
+//        }
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e){
+        if(e.getClickCount() == 2) {
+            //JTable에서 선택한 로우의 index값을 담기
+            int index = jtb_zipcode.getSelectedRow();
+            for(int i = 0; i < dtm_zipcode.getRowCount(); i++) {
+                if(jtb_zipcode.isRowSelected(i)) {
+                    String address = dtm_zipcode.getValueAt(i, 1).toString();
+                    memberShip.jtf_zipcode.setText(String.valueOf(dtm_zipcode.getValueAt(i, 0)));
+                    memberShip.jtf_address.setText(address);
+                    this.dispose();
+                }
+            }
+        }//더블 클릭 했을때
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
     }
 }

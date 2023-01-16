@@ -31,9 +31,13 @@ public class MemberShip extends JFrame implements ActionListener {
     JTextField jtf_file = new JTextField(45);
     JLabel jlb_img = new JLabel("이미지");
     Container cont = this.getContentPane();
+    ZipcodeSearchView zsView = new ZipcodeSearchView(this);
 
     public void initDisplay() {
         jbtn_file.addActionListener(this);
+        jbtn_zipcode.addActionListener(this);
+//        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);//JDialog에서는 적용이 안된다.
+        //윈도우 창에서 x버튼 눌렀을때 창 닫기 구현
         // 윈도우 리스너 설정
         this.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent evt) {
@@ -42,21 +46,21 @@ public class MemberShip extends JFrame implements ActionListener {
             }
         });
         jp_center.setLayout(null);
-        jlb_address.setBounds(20,20,100,20);
+        jlb_zipcode.setBounds(20,20,100,20);
         jtf_zipcode.setBounds(120,20,100,20);
         jbtn_zipcode.setBounds(230,20,100,20);
-        jtf_address.setBounds(120,20,100,20);
-        jlb_address.setBounds(120,20,100,20);
+        jlb_address.setBounds(20,45,100,20);
+        jtf_address.setBounds(120,45,250,20);
 
-
-
-        jbtn_file.setBounds(20, 25, 90, 20);
-        jtf_file.setBounds(120, 25, 350, 20);
+        jbtn_file.setBounds(20, 70, 90, 20);
+        jtf_file.setBounds(120, 70, 350, 20);
         jlb_img.setBorder(BorderFactory.createEtchedBorder());
-        jlb_img.setBounds(120, 45, 200, 270);
+        jlb_img.setBounds(120, 95, 200, 270);
         jp_center.add(jlb_zipcode);
         jp_center.add(jtf_zipcode);
         jp_center.add(jbtn_zipcode);
+        jp_center.add(jlb_address);
+        jp_center.add(jtf_address);
         jp_center.add(jbtn_file);
         jp_center.add(jtf_file);
         jp_center.add(jlb_img);
@@ -67,6 +71,7 @@ public class MemberShip extends JFrame implements ActionListener {
 
     }
 
+
     public static void main(String[] args) {
         MemberShip ir = new MemberShip();
         ir.initDisplay();
@@ -75,7 +80,11 @@ public class MemberShip extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         Object obj = e.getSource();
-        if (jbtn_file == obj) {
+        //너 우편번호 찾기 버튼 누른거야?
+        if(jbtn_zipcode==obj){
+            zsView.setVisible(true);
+        }
+        else if (jbtn_file == obj) {
             // [열기] 대화상자를 오픈한다
             myFileChooser.setCurrentDirectory(new File("D:\\vscode_java\\dev_java2\\image"));
             int intRet = myFileChooser.showOpenDialog(MemberShip.this);
